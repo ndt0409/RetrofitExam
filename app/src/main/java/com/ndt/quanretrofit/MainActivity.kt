@@ -18,17 +18,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ExamAdapter
     private var listExam = arrayListOf<ArticlesModel>()
+    private var status =""
+    private var total  =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         adapter = ExamAdapter(listExam)
         binding.rvExam.adapter = adapter
         binding.rvExam.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         getAllExam()
-
 
     }
 
@@ -37,12 +37,15 @@ class MainActivity : AppCompatActivity() {
             var response: Response<Exam> = ExamClient().getAllExam().execute()
             if (response.isSuccessful) {
                 response.body()?.let {
-                    binding.tvStatussss.text = it.status
-                    binding.tvTotalResultssss.text = it.totalResults
                     listExam.addAll(it.articles)
+                    status = it.status
+                    total = it.totalResults
                 }
                 withContext(Dispatchers.Main) {
+                    binding.tvTotalResultsssss.text =total
+                    binding.tvStatusssss.text =status
                     adapter.notifyDataSetChanged()
+
                 }
             }
         }
